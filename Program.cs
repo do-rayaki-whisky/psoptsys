@@ -12,7 +12,7 @@ namespace psoptsys_export
     {
         static void Main(string[] args)
         {
-
+            /* ตรวจสอบตัวแปร args ว่ามีการใส่ค่าใดๆมาหรือเปล่า ในกรณีที่ไม่ได้มีการกำหนดค่าใดๆมา จะแสดงวิธีการใช้โปรแกรม */
             if(args.Length == 0){
                 Console.WriteLine("");
                 Console.WriteLine("[How to use]");
