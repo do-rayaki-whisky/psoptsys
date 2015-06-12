@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.OleDb;
-using System.IO;
+using System.Data.OleDb; /* ใช้ อ่าน เขียน ฐานข้อมูล */
+using System.IO; /* ใช้อ่าน เขียน ข้อมูลลงในไฟล์ */
 
 namespace psoptsys_export
 {
@@ -23,9 +23,9 @@ namespace psoptsys_export
                 return;
             }
 
-            string databasePath = args[0].ToString();
-            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + databasePath + ";User Id=admin;Password=;";
-            string sqlSelectQuery = "select [Tch_ID],[Tch_FrontName],[Tch_Name],[Tch_SerName] from [Tch_Hist] order by [Tch_ID] asc";
+            string databasePath = args[0].ToString(); /* กำหนดพาธของฐานข้อมูล */
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + databasePath + ";User Id=admin;Password=;"; /* Connection String Access 2003 */
+            string sqlSelectQuery = "select [Tch_ID],[Tch_FrontName],[Tch_Name],[Tch_SerName] from [Tch_Hist] order by [Tch_ID] asc"; /* คำสั้ง SQL เลือกข้อมูล ไอดี คำนำหน้า ชื่อ และนามสกุล */
 
             if (databasePath == string.Empty)
             {
@@ -33,7 +33,7 @@ namespace psoptsys_export
             }
             else if (CheckFilePath(databasePath) == false)
             {
-                Console.WriteLine("Can not find a database file or Path not correct.");
+                Console.WriteLine("Can not find a database file or Path not correct."); /* ถ้าพาธที่ป้อนเข้ามาไม่ถูกต้องหรือหาไฟล์ไม่เจอ */
                 return;
             }
             else
@@ -48,12 +48,12 @@ namespace psoptsys_export
                     OBC_Connecttion.Open();
                     OBC_DataReader = OBC_Command.ExecuteReader();
 
-                    int NumberOfColumn = OBC_DataReader.FieldCount;
+                    int NumberOfColumn = OBC_DataReader.FieldCount; /* เก็บจำนวนคอลัม */
 
                     for (int i = 0; i < NumberOfColumn; i++)
                     {
-                        OBC_StrData.Append(OBC_DataReader.GetName(i));
-                        if (i + 1 < NumberOfColumn)
+                        OBC_StrData.Append(OBC_DataReader.GetName(i)); /* นำชื่อคอมลัมมาเรียงในรูปแบบ csv ในบรรทัดแรก */
+                        if (i + 1 < NumberOfColumn) /* ในคอลัมสุดท้ายจะไม่มีการใส่คอมม่า */
                         {
                             OBC_StrData.Append(",");
                         }
@@ -64,7 +64,7 @@ namespace psoptsys_export
                     {
                         for (int i = 0; i < NumberOfColumn; i++)
                         {
-                            OBC_StrData.Append(OBC_DataReader[i].ToString());
+                            OBC_StrData.Append(OBC_DataReader[i].ToString()); /* นำข้อมูลทั้งหมดมาใส่ไว้ใน object ในรูปแบบ csv */
                             if (i + 1 < NumberOfColumn)
                             {
                                 OBC_StrData.Append(",");
@@ -73,12 +73,12 @@ namespace psoptsys_export
                         OBC_StrData.Append(Environment.NewLine);
                     }
 
-                    OBC_StrData.Replace("(อ)", string.Empty);
-                    OBC_StrData.Replace("(ป/บ)", string.Empty);
-                    OBC_StrData.Replace("(ป.โท)", string.Empty);
-                    OBC_StrData.Replace("(ชูชาติ)", string.Empty);
+                    OBC_StrData.Replace("(อ)", string.Empty); /* ตัดคำที่ไม่ต้องการออก */
+                    OBC_StrData.Replace("(ป/บ)", string.Empty); /* ตัดคำที่ไม่ต้องการออก */
+                    OBC_StrData.Replace("(ป.โท)", string.Empty); /* ตัดคำที่ไม่ต้องการออก */
+                    OBC_StrData.Replace("(ชูชาติ)", string.Empty); /* ตัดคำที่ไม่ต้องการออก */
 
-                    using (StreamWriter OBC_SW = new StreamWriter(File.Open("Output.csv", FileMode.Create), Encoding.UTF8))
+                    using (StreamWriter OBC_SW = new StreamWriter(File.Open("Output.csv", FileMode.Create), Encoding.UTF8)) /* นำข้อมูลทั้งหมดมาเขียนลงในไฟล์ */
                     {
 
                         OBC_SW.Write(OBC_StrData.ToString());
@@ -95,7 +95,7 @@ namespace psoptsys_export
             }     
         }
 
-        static bool CheckFilePath(string FilePath)
+        static bool CheckFilePath(string FilePath) /* ฟังชันตรวจสอบพาธของฐานข้อมูล */
         {
             Boolean result = File.Exists(FilePath);
             return result;
